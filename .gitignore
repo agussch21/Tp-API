@@ -1,0 +1,15 @@
+# Archivos de configuración de usuario y compilación
+.vs/
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+
+# Base de datos SQLite (para que cada uno tenga la suya local)
+*.db
+*.db-shm
+*.db-wal
+
+# Carpetas de paquetes
+**/packages/
