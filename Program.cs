@@ -12,13 +12,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<PacienteService>();
 builder.Services.AddScoped<TurnoService>();
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+}
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
