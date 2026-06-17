@@ -25,4 +25,10 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 
+using (var scope = app.services.createScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated()
+    }
+
 app.Run();
