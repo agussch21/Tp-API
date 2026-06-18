@@ -25,21 +25,21 @@ namespace TurnosMedicosAPI.Controllers
         public async Task<IActionResult> Post(TurnoDTO dto)
         {
             await _service.Crear(dto);
-            return Ok();
+            return StatusCode(201);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, TurnoDTO dto)
         {
             await _service.Actualizar(id, dto);
-            return Ok();
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
             await _service.Eliminar(id);
-            return Ok();
+            return NoContent();
         }
     }
 }
