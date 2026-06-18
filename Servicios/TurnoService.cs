@@ -30,7 +30,7 @@ namespace TurnosMedicosAPI.Services
                 lista.Add(new TurnoDTO
                 {
                     Id = reader.GetInt32(0),
-                    FechaHora = DateTime.Parse(reader.GetString(1)),
+                    FechaHora = reader.GetString(1),
                     Especialidad = reader.GetString(2),
                     PacienteId = reader.GetInt32(3),
                     NombrePaciente = reader.GetString(4)
@@ -46,7 +46,7 @@ namespace TurnosMedicosAPI.Services
             
             using var cmd = cn.CreateCommand();
             cmd.CommandText = "INSERT INTO Turnos (FechaHora, Especialidad, PacienteId) VALUES ($fecha, $especialidad, $pacienteId);";
-            cmd.Parameters.AddWithValue("$fecha", dto.FechaHora.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("$fecha", dto.FechaHora);
             cmd.Parameters.AddWithValue("$especialidad", dto.Especialidad);
             cmd.Parameters.AddWithValue("$pacienteId", dto.PacienteId);
             
@@ -60,7 +60,7 @@ namespace TurnosMedicosAPI.Services
             
             using var cmd = cn.CreateCommand();
             cmd.CommandText = "UPDATE Turnos SET FechaHora = $fecha, Especialidad = $especialidad, PacienteId = $pacienteId WHERE Id = $id;";
-            cmd.Parameters.AddWithValue("$fecha", dto.FechaHora.ToString("yyyy-MM-dd HH:mm:ss"));
+            cmd.Parameters.AddWithValue("$fecha", dto.FechaHora);
             cmd.Parameters.AddWithValue("$especialidad", dto.Especialidad);
             cmd.Parameters.AddWithValue("$pacienteId", dto.PacienteId);
             cmd.Parameters.AddWithValue("$id", id);
