@@ -1,16 +1,14 @@
-using Microsoft.EntityFrameworkCore;
-using TurnosMedicosAPI.Data;
 using TurnosMedicosAPI.Services;
+using Microsoft.Data.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite("Data Source=turnos.db"));
+string cadenaConexion = "Data Source=turnos.db";
 
-builder.Services.AddScoped<PacienteService>();
-builder.Services.AddScoped<TurnoService>();
+builder.Services.AddScoped(provider => new PacienteService(cadenaConexion));
+builder.Services.AddScoped(provider => new TurnoService(cadenaConexion));
 
 builder.Services.AddOpenApi();
 
@@ -22,13 +20,30 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.MapControllers();
 
-using (var scope = app.Services.createScope())
+using (var cn = new SqliteConnection(cadenaConexion))
 {
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
-    }
+    cn.Open();
+    using var cmd = cn.CreateCommand();
+    
+    cmd.CommandText = @"
+        CREATE TABLE IF NOT EXISTS Pacientes (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            NombreCompleto TEXT NOT NULL,
+            DNI TEXT NOT NULL,
+            ObraSocial TEXT
+        );";
+    cmd.ExecuteNonQuery();
+
+    cmd.CommandText = @"
+        CREATE TABLE IF NOT EXISTS Turnos (
+            Id INTEGER PRIMARY KEY AUTOINCREMENT,
+            FechaHora TEXT NOT NULL,
+            Especialidad TEXT NOT NULL,
+            PacienteId INTEGER NOT NULL
+        );";
+    cmd.ExecuteNonQuery();
+}
 
 app.Run();
